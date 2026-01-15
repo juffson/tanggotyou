@@ -1,1 +1,105 @@
-# tanggotyou
+# 日语学习网站
+
+使用 Rust + Axum + HTMX 构建的日语学习网站，集成 AI 聊天助手和五十音学习工具。
+
+## 功能特点
+
+- **AI 日语学习助手**: 基于 OpenAI GPT 的智能对话，随时解答日语学习问题
+- **五十音图**: 完整的平假名和片假名表格，点击发音
+- **练习测试**: 多种模式的五十音测试（看假名选罗马音、看罗马音写假名等）
+- **书写练习**: Canvas 画布支持手写练习，支持触摸和鼠标
+- **流式响应**: AI 回复采用流式传输，体验流畅
+
+## 技术栈
+
+- **后端**: Rust + Axum
+- **前端**: HTMX + 原生 JavaScript + Tailwind CSS
+- **AI**: OpenAI API
+- **模板**: Askama
+- **语音**: Web Speech API
+
+## 快速开始
+
+### 1. 配置环境变量
+
+```bash
+cp .env.example .env
+```
+
+编辑 `.env` 文件，添加你的 OpenAI API Key:
+
+```env
+OPENAI_API_KEY=sk-your-api-key-here
+```
+
+### 2. 构建并运行
+
+```bash
+# 安装依赖并构建
+cargo build --release
+
+# 运行服务器
+cargo run --release
+```
+
+### 3. 访问网站
+
+打开浏览器访问 `http://localhost:3000`
+
+## 项目结构
+
+```
+tanggotyou/
+├── src/
+│   ├── main.rs              # 主入口
+│   ├── routes/              # 路由处理
+│   ├── services/            # OpenAI 服务
+│   ├── models/              # 五十音数据模型
+│   └── templates/           # HTML 模板
+├── static/
+│   ├── js/                  # JavaScript 文件
+│   └── css/                 # 样式文件
+├── Cargo.toml               # 项目配置
+└── .env                     # 环境变量
+```
+
+## API 端点
+
+- `GET /` - 主页
+- `POST /api/chat` - AI 聊天（SSE 流式响应）
+- `GET /api/gojuon/data` - 获取所有五十音数据
+- `GET /api/gojuon/seion` - 获取清音数据
+- `GET /api/gojuon/quiz` - 生成练习题
+- `POST /api/gojuon/check` - 检查答案
+
+## 使用说明
+
+### AI 聊天
+
+在左侧聊天框输入你的问题，AI 助手会帮助你学习日语。例如：
+- "教我日语的问候语"
+- "は和が有什么区别？"
+- "帮我练习简单的日常对话"
+
+### 五十音练习
+
+1. **表格模式**: 点击假名听发音，切换平假名/片假名
+2. **测试模式**: 选择测试类型，开始10题随机测试
+3. **书写模式**: 在画布上练习手写假名
+
+## 开发
+
+```bash
+# 开发模式运行
+cargo run
+
+# 运行测试
+cargo test
+
+# 代码格式化
+cargo fmt
+```
+
+## 许可证
+
+MIT
