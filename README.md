@@ -20,31 +20,57 @@
 
 ## 快速开始
 
-### 1. 配置环境变量
+### 方法 1: Docker 部署（推荐）
+
+最简单的方式，无需安装 Rust 环境：
 
 ```bash
+# 1. 配置环境变量
 cp .env.example .env
+# 编辑 .env 文件，添加你的 OpenAI API Key
+
+# 2. 使用 docker-compose 启动
+docker-compose up -d
+
+# 3. 查看日志
+docker-compose logs -f
+
+# 4. 访问网站
+# 打开浏览器访问 http://localhost:3000
 ```
 
-编辑 `.env` 文件，添加你的 OpenAI API Key:
+停止服务：
+```bash
+docker-compose down
+```
+
+### 方法 2: 本地运行
+
+需要安装 Rust 1.75+ 环境：
+
+```bash
+# 1. 配置环境变量
+cp .env.example .env
+# 编辑 .env 文件，添加你的 OpenAI API Key
+
+# 2. 构建并运行
+cargo build --release
+cargo run --release
+
+# 3. 访问网站
+# 打开浏览器访问 http://localhost:3000
+```
+
+### 环境变量配置
+
+编辑 `.env` 文件：
 
 ```env
 OPENAI_API_KEY=sk-your-api-key-here
+OPENAI_API_BASE=https://api.openai.com/v1
+OPENAI_MODEL=gpt-4o-mini
+RUST_LOG=tanggotyou=info
 ```
-
-### 2. 构建并运行
-
-```bash
-# 安装依赖并构建
-cargo build --release
-
-# 运行服务器
-cargo run --release
-```
-
-### 3. 访问网站
-
-打开浏览器访问 `http://localhost:3000`
 
 ## 项目结构
 
@@ -54,12 +80,15 @@ tanggotyou/
 │   ├── main.rs              # 主入口
 │   ├── routes/              # 路由处理
 │   ├── services/            # OpenAI 服务
-│   ├── models/              # 五十音数据模型
-│   └── templates/           # HTML 模板
+│   └── models/              # 五十音数据模型
+├── templates/               # HTML 模板
+│   └── index.html
 ├── static/
 │   ├── js/                  # JavaScript 文件
 │   └── css/                 # 样式文件
 ├── Cargo.toml               # 项目配置
+├── Dockerfile               # Docker 镜像构建
+├── docker-compose.yml       # Docker Compose 配置
 └── .env                     # 环境变量
 ```
 
@@ -98,7 +127,42 @@ cargo test
 
 # 代码格式化
 cargo fmt
+
+# Docker 构建
+docker build -t tanggotyou .
+
+# 查看 Docker 日志
+docker-compose logs -f tanggotyou
 ```
+
+## 部署
+
+### Docker 生产部署
+
+```bash
+# 构建镜像
+docker build -t tanggotyou:latest .
+
+# 运行容器
+docker run -d \
+  -p 3000:3000 \
+  -e OPENAI_API_KEY=your-key \
+  -e OPENAI_MODEL=gpt-4o-mini \
+  --name tanggotyou \
+  tanggotyou:latest
+```
+
+### 云平台部署
+
+支持部署到以下平台：
+- Railway
+- Render
+- Fly.io
+- AWS ECS
+- Google Cloud Run
+- Azure Container Apps
+
+只需将 Dockerfile 推送到对应平台，配置环境变量即可。
 
 ## 许可证
 

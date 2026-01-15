@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  tanggotyou:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_API_BASE=${OPENAI_API_BASE:-https://api.openai.com/v1}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o-mini}
+      - RUST_LOG=${RUST_LOG:-tanggotyou=info,tower_http=info}
+    volumes:
+      # 开发模式下可以挂载代码（生产环境注释掉）
+      # - ./static:/app/static
+      # - ./templates:/app/templates
+    restart: unless-stopped
+    container_name: tanggotyou
