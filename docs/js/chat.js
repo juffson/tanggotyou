@@ -1,5 +1,25 @@
 // 聊天消息历史
 let chatHistory = [];
+let isChatOpen = false;
+
+// 切换聊天窗口
+function toggleChat() {
+    const chatWindow = document.getElementById('chat-window');
+    const chatBar = document.getElementById('chat-bar');
+    const toggleIcon = document.getElementById('chat-toggle-icon');
+
+    isChatOpen = !isChatOpen;
+
+    if (isChatOpen) {
+        chatWindow.style.transform = 'translateY(0)';
+        chatBar.style.transform = 'translateY(100%)';
+        toggleIcon.textContent = '▼ 关闭';
+    } else {
+        chatWindow.style.transform = 'translateY(100%)';
+        chatBar.style.transform = 'translateY(0)';
+        toggleIcon.textContent = '▲ 打开';
+    }
+}
 
 // 发送消息
 async function sendMessage() {

@@ -84,7 +84,7 @@
         <header class="mb-4 flex justify-between items-center">
             <div>
                 <h1 class="text-3xl font-bold text-blue-600">🇯🇵 日语学习助手</h1>
-                <p class="text-gray-600">AI 聊天 + 五十音练习 | 纯前端版本</p>
+                <p class="text-gray-600">五十音学习工具 | 纯前端版本</p>
             </div>
             <button
                 onclick="showApiKeyModal()"
@@ -95,96 +95,131 @@
             </button>
         </header>
 
-        <div class="flex-1 flex gap-4 overflow-hidden flex-col md:flex-row">
-            <!-- 左侧: 五十音 Widget (70%) -->
-            <div class="flex-[7] bg-white rounded-lg shadow-lg p-4 overflow-y-auto">
-                <h2 class="text-2xl font-bold mb-4 text-blue-600">🇯🇵 五十音图</h2>
+        <!-- 五十音区域占据整个页面 -->
+        <div class="flex-1 bg-white rounded-lg shadow-lg p-6 overflow-y-auto">
+            <h2 class="text-3xl font-bold mb-6 text-blue-600 text-center">五十音図</h2>
 
-                <!-- 模式切换 -->
-                <div class="mb-4 flex gap-2">
-                    <button onclick="switchMode('table')" id="btn-table" class="flex-1 px-4 py-2 rounded bg-blue-500 text-white">
-                        表格
+            <!-- 模式切换 -->
+            <div class="mb-6 flex gap-3 max-w-2xl mx-auto">
+                <button onclick="switchMode('table')" id="btn-table" class="flex-1 px-6 py-3 rounded-lg bg-blue-500 text-white text-lg font-bold">
+                    表格
+                </button>
+                <button onclick="switchMode('quiz')" id="btn-quiz" class="flex-1 px-6 py-3 rounded-lg bg-gray-200 text-lg font-bold">
+                    测试
+                </button>
+                <button onclick="switchMode('writing')" id="btn-writing" class="flex-1 px-6 py-3 rounded-lg bg-gray-200 text-lg font-bold">
+                    书写
+                </button>
+            </div>
+
+            <!-- 表格模式 -->
+            <div id="mode-table" class="mode-section max-w-4xl mx-auto">
+                <div class="mb-6 flex gap-3">
+                    <button onclick="switchKana('hiragana')" id="btn-hiragana" class="flex-1 px-6 py-3 rounded-lg bg-blue-500 text-white text-lg font-bold">
+                        平假名 ひらがな
                     </button>
-                    <button onclick="switchMode('quiz')" id="btn-quiz" class="flex-1 px-4 py-2 rounded bg-gray-200">
-                        测试
-                    </button>
-                    <button onclick="switchMode('writing')" id="btn-writing" class="flex-1 px-4 py-2 rounded bg-gray-200">
-                        书写
+                    <button onclick="switchKana('katakana')" id="btn-katakana" class="flex-1 px-6 py-3 rounded-lg bg-gray-200 text-lg font-bold">
+                        片假名 カタカナ
                     </button>
                 </div>
+                <div id="gojuon-grid" class="grid grid-cols-5 gap-4 text-center"></div>
+            </div>
 
-                <!-- 表格模式 -->
-                <div id="mode-table" class="mode-section">
-                    <div class="mb-4 flex gap-2">
-                        <button onclick="switchKana('hiragana')" id="btn-hiragana" class="flex-1 px-4 py-2 rounded bg-blue-500 text-white">
-                            平假名
-                        </button>
-                        <button onclick="switchKana('katakana')" id="btn-katakana" class="flex-1 px-4 py-2 rounded bg-gray-200">
-                            片假名
-                        </button>
-                    </div>
-                    <div id="gojuon-grid" class="grid grid-cols-5 gap-3 text-center"></div>
+            <!-- 测试模式 -->
+            <div id="mode-quiz" class="mode-section hidden max-w-2xl mx-auto">
+                <div class="mb-6">
+                    <select id="quiz-type" class="w-full border-2 rounded-lg px-6 py-4 mb-4 text-lg">
+                        <option value="hiragana_to_romaji">看平假名选罗马音</option>
+                        <option value="katakana_to_romaji">看片假名选罗马音</option>
+                        <option value="romaji_to_hiragana">看罗马音写平假名</option>
+                        <option value="romaji_to_katakana">看罗马音写片假名</option>
+                    </select>
+                    <button onclick="startQuiz()" class="w-full bg-green-500 text-white px-8 py-4 rounded-lg hover:bg-green-600 text-xl font-bold">
+                        开始测试 (10题)
+                    </button>
                 </div>
-
-                <!-- 测试模式 -->
-                <div id="mode-quiz" class="mode-section hidden">
-                    <div class="mb-4">
-                        <select id="quiz-type" class="w-full border rounded px-4 py-3 mb-3 text-base">
-                            <option value="hiragana_to_romaji">看平假名选罗马音</option>
-                            <option value="katakana_to_romaji">看片假名选罗马音</option>
-                            <option value="romaji_to_hiragana">看罗马音写平假名</option>
-                            <option value="romaji_to_katakana">看罗马音写片假名</option>
-                        </select>
-                        <button onclick="startQuiz()" class="w-full bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 text-lg font-bold">
-                            开始测试 (10题)
-                        </button>
-                    </div>
-                    <div id="quiz-container"></div>
-                    <div id="quiz-stats" class="mt-4 text-center hidden">
-                        <p class="text-2xl font-bold">正确率: <span id="quiz-score">0</span>%</p>
-                        <p class="text-base text-gray-600 mt-2">(<span id="quiz-correct">0</span>/<span id="quiz-total">0</span>)</p>
-                    </div>
-                </div>
-
-                <!-- 书写模式 -->
-                <div id="mode-writing" class="mode-section hidden">
-                    <div class="mb-4">
-                        <p class="text-center font-bold text-2xl mb-3">练习书写: <span id="writing-char">あ</span></p>
-                        <p class="text-center text-gray-600 text-lg mb-4"><span id="writing-romaji">a</span></p>
-                    </div>
-                    <canvas id="canvas" width="400" height="400" class="mb-4 mx-auto"></canvas>
-                    <div class="flex gap-3">
-                        <button onclick="clearCanvas()" class="flex-1 bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 text-lg">
-                            清除
-                        </button>
-                        <button onclick="nextWritingChar()" class="flex-1 bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 text-lg">
-                            下一个
-                        </button>
-                    </div>
+                <div id="quiz-container"></div>
+                <div id="quiz-stats" class="mt-6 text-center hidden">
+                    <p class="text-3xl font-bold">正确率: <span id="quiz-score">0</span>%</p>
+                    <p class="text-lg text-gray-600 mt-2">(<span id="quiz-correct">0</span>/<span id="quiz-total">0</span>)</p>
                 </div>
             </div>
 
-            <!-- 右侧: AI 聊天区域 (30%) -->
-            <div class="flex-[3] flex flex-col bg-white rounded-lg shadow-lg p-4">
-                <h2 class="text-xl font-bold mb-3 text-blue-600">💬 AI 助手</h2>
-                <div class="flex-1 overflow-y-auto mb-3" id="chat-messages">
-                    <div class="message-ai p-3 mb-2 max-w-full">
-                        <p class="font-bold mb-1 text-sm">AI 助手</p>
-                        <div class="prose prose-sm">こんにちは！你好！我是你的日语学习助手。你可以问我任何关于日语学习的问题。</div>
+            <!-- 书写模式 -->
+            <div id="mode-writing" class="mode-section hidden max-w-2xl mx-auto">
+                <div class="mb-6 text-center">
+                    <p class="font-bold text-4xl mb-4">练习书写: <span id="writing-char">あ</span></p>
+                    <p class="text-gray-600 text-2xl mb-6"><span id="writing-romaji">a</span></p>
+                </div>
+                <canvas id="canvas" width="500" height="500" class="mb-6 mx-auto"></canvas>
+                <div class="flex gap-4">
+                    <button onclick="clearCanvas()" class="flex-1 bg-gray-500 text-white px-8 py-4 rounded-lg hover:bg-gray-600 text-xl font-bold">
+                        清除
+                    </button>
+                    <button onclick="nextWritingChar()" class="flex-1 bg-blue-500 text-white px-8 py-4 rounded-lg hover:bg-blue-600 text-xl font-bold">
+                        下一个
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部聊天栏 -->
+    <div id="chat-bar" class="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg cursor-pointer hover:from-blue-600 hover:to-blue-700 transition z-50" onclick="toggleChat()">
+        <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">💬</span>
+                <div>
+                    <p class="font-bold text-lg">AI 日语助手</p>
+                    <p class="text-sm text-blue-100">点击开始对话</p>
+                </div>
+            </div>
+            <button class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition">
+                <span id="chat-toggle-icon">▲ 打开</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 聊天弹窗 -->
+    <div id="chat-window" class="fixed bottom-0 left-0 right-0 bg-white shadow-2xl transform translate-y-full transition-transform duration-300 z-40" style="height: 60vh;">
+        <div class="h-full flex flex-col">
+            <!-- 聊天窗口头部 -->
+            <div class="bg-blue-500 text-white px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">💬</span>
+                    <div>
+                        <p class="font-bold text-lg">AI 日语学习助手</p>
+                        <p class="text-sm text-blue-100">随时为你解答日语问题</p>
                     </div>
                 </div>
+                <button onclick="toggleChat()" class="hover:bg-white/20 p-2 rounded-lg transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+            </div>
 
-                <div class="flex flex-col gap-2">
+            <!-- 聊天消息区域 -->
+            <div class="flex-1 overflow-y-auto p-6 bg-gray-50" id="chat-messages">
+                <div class="message-ai p-4 mb-3 max-w-[80%]">
+                    <p class="font-bold mb-2">AI 助手</p>
+                    <div class="prose">こんにちは！你好！我是你的日语学习助手。你可以问我任何关于日语学习的问题。</div>
+                </div>
+            </div>
+
+            <!-- 输入区域 -->
+            <div class="border-t bg-white p-4">
+                <div class="flex gap-3">
                     <input
                         type="text"
                         id="message-input"
-                        class="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="flex-1 border-2 rounded-lg px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="输入你的问题..."
                         onkeypress="if(event.key==='Enter') sendMessage()"
                     >
                     <button
                         onclick="sendMessage()"
-                        class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm"
+                        class="bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 transition text-lg font-bold"
                     >
                         发送
                     </button>
