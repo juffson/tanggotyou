@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: tanggotyou
+    env: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_API_BASE
+        value: https://api.openai.com/v1
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      - key: RUST_LOG
+        value: tanggotyou=info,tower_http=info

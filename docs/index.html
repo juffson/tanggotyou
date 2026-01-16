@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日语学习 - AI助手 + 五十音</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        .message-user {
+            background: #e3f2fd;
+            border-radius: 1rem 1rem 0 1rem;
+        }
+        .message-ai {
+            background: #f5f5f5;
+            border-radius: 1rem 1rem 1rem 0;
+        }
+        .gojuon-cell {
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .gojuon-cell:hover {
+            background: #bbdefb;
+            transform: scale(1.1);
+        }
+        .gojuon-cell.active {
+            background: #2196f3;
+            color: white;
+        }
+        #canvas {
+            border: 2px solid #ccc;
+            border-radius: 0.5rem;
+            cursor: crosshair;
+            touch-action: none;
+        }
+        .quiz-option {
+            transition: all 0.2s;
+        }
+        .quiz-option:hover {
+            background: #e3f2fd;
+        }
+        .quiz-option.correct {
+            background: #c8e6c9;
+            border-color: #4caf50;
+        }
+        .quiz-option.incorrect {
+            background: #ffcdd2;
+            border-color: #f44336;
+        }
+        #api-key-modal {
+            background: rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- API Key 设置弹窗 -->
+    <div id="api-key-modal" class="fixed inset-0 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4">
+            <h2 class="text-2xl font-bold mb-4 text-blue-600">🔑 设置 OpenAI API Key</h2>
+            <p class="text-gray-600 mb-4">为了使用 AI 聊天功能，请输入你的 OpenAI API Key。密钥只存储在你的浏览器中，不会上传到任何服务器。</p>
+
+            <input
+                type="password"
+                id="api-key-input"
+                class="w-full border rounded-lg px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="sk-..."
+            >
+
+            <div class="text-sm text-gray-500 mb-4">
+                <p>没有 API Key？ <a href="https://platform.openai.com/api-keys" target="_blank" class="text-blue-500 underline">点击这里获取</a></p>
+                <p class="mt-2">或者 <button onclick="skipApiKey()" class="text-blue-500 underline">跳过此步骤</button>（只使用五十音功能）</p>
+            </div>
+
+            <button
+                onclick="saveApiKey()"
+                class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+            >
+                保存并继续
+            </button>
+        </div>
+    </div>
+
+    <div class="container mx-auto p-4 h-screen flex flex-col">
+        <header class="mb-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-blue-600">🇯🇵 日语学习助手</h1>
+                <p class="text-gray-600">AI 聊天 + 五十音练习 | 纯前端版本</p>
+            </div>
+            <button
+                onclick="showApiKeyModal()"
+                class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg text-sm"
+                title="重新设置 API Key"
+            >
+                🔑 API Key
+            </button>
+        </header>
+
+        <div class="flex-1 flex gap-4 overflow-hidden flex-col md:flex-row">
+            <!-- 左侧: AI 聊天区域 (70%) -->
+            <div class="flex-[7] flex flex-col bg-white rounded-lg shadow-lg p-4">
+                <div class="flex-1 overflow-y-auto mb-4" id="chat-messages">
+                    <div class="message-ai p-4 mb-3 max-w-[80%]">
+                        <p class="font-bold mb-2">AI 助手</p>
+                        <div class="prose">こんにちは！你好！我是你的日语学习助手。你可以问我任何关于日语学习的问题，或者使用右侧的五十音工具开始练习基础假名。</div>
+                    </div>
+                </div>
+
+                <div class="flex gap-2">
+                    <input
+                        type="text"
+                        id="message-input"
+                        class="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="输入你的问题..."
+                        onkeypress="if(event.key==='Enter') sendMessage()"
+                    >
+                    <button
+                        onclick="sendMessage()"
+                        class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition"
+                    >
+                        发送
+                    </button>
+                </div>
+            </div>
+
+            <!-- 右侧: 五十音 Widget (30%) -->
+            <div class="flex-[3] bg-white rounded-lg shadow-lg p-4 overflow-y-auto">
+                <h2 class="text-xl font-bold mb-4 text-blue-600">五十音图</h2>
+
+                <!-- 模式切换 -->
+                <div class="mb-4 flex gap-2">
+                    <button onclick="switchMode('table')" id="btn-table" class="flex-1 px-3 py-2 rounded bg-blue-500 text-white text-sm">
+                        表格
+                    </button>
+                    <button onclick="switchMode('quiz')" id="btn-quiz" class="flex-1 px-3 py-2 rounded bg-gray-200 text-sm">
+                        测试
+                    </button>
+                    <button onclick="switchMode('writing')" id="btn-writing" class="flex-1 px-3 py-2 rounded bg-gray-200 text-sm">
+                        书写
+                    </button>
+                </div>
+
+                <!-- 表格模式 -->
+                <div id="mode-table" class="mode-section">
+                    <div class="mb-3 flex gap-2">
+                        <button onclick="switchKana('hiragana')" id="btn-hiragana" class="flex-1 px-3 py-1 rounded bg-blue-500 text-white text-sm">
+                            平假名
+                        </button>
+                        <button onclick="switchKana('katakana')" id="btn-katakana" class="flex-1 px-3 py-1 rounded bg-gray-200 text-sm">
+                            片假名
+                        </button>
+                    </div>
+                    <div id="gojuon-grid" class="grid grid-cols-5 gap-2 text-center"></div>
+                </div>
+
+                <!-- 测试模式 -->
+                <div id="mode-quiz" class="mode-section hidden">
+                    <div class="mb-4">
+                        <select id="quiz-type" class="w-full border rounded px-3 py-2 mb-2 text-sm">
+                            <option value="hiragana_to_romaji">看平假名选罗马音</option>
+                            <option value="katakana_to_romaji">看片假名选罗马音</option>
+                            <option value="romaji_to_hiragana">看罗马音写平假名</option>
+                            <option value="romaji_to_katakana">看罗马音写片假名</option>
+                        </select>
+                        <button onclick="startQuiz()" class="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                            开始测试 (10题)
+                        </button>
+                    </div>
+                    <div id="quiz-container"></div>
+                    <div id="quiz-stats" class="mt-4 text-center hidden">
+                        <p class="text-lg font-bold">正确率: <span id="quiz-score">0</span>%</p>
+                        <p class="text-sm text-gray-600">(<span id="quiz-correct">0</span>/<span id="quiz-total">0</span>)</p>
+                    </div>
+                </div>
+
+                <!-- 书写模式 -->
+                <div id="mode-writing" class="mode-section hidden">
+                    <div class="mb-3">
+                        <p class="text-center font-bold text-lg mb-2">练习书写: <span id="writing-char">あ</span></p>
+                        <p class="text-center text-gray-600 text-sm mb-3"><span id="writing-romaji">a</span></p>
+                    </div>
+                    <canvas id="canvas" width="240" height="240" class="mb-3 mx-auto"></canvas>
+                    <div class="flex gap-2">
+                        <button onclick="clearCanvas()" class="flex-1 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                            清除
+                        </button>
+                        <button onclick="nextWritingChar()" class="flex-1 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                            下一个
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/gojuon-data.js"></script>
+    <script src="js/speech.js"></script>
+    <script src="js/gojuon.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/api-key.js"></script>
+</body>
+</html>

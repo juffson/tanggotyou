@@ -1,0 +1,31 @@
+app = "tanggotyou"
+primary_region = "nrt"  # Tokyo region
+
+[build]
+
+[env]
+  OPENAI_API_BASE = "https://api.openai.com/v1"
+  OPENAI_MODEL = "gpt-4o-mini"
+  RUST_LOG = "tanggotyou=info,tower_http=info"
+
+[[services]]
+  internal_port = 3000
+  protocol = "tcp"
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+[services.concurrency]
+  type = "connections"
+  hard_limit = 25
+  soft_limit = 20
+
+[[services.tcp_checks]]
+  interval = "15s"
+  timeout = "2s"
+  grace_period = "5s"

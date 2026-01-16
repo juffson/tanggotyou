@@ -2,6 +2,10 @@
 
 使用 Rust + Axum + HTMX 构建的日语学习网站，集成 AI 聊天助手和五十音学习工具。
 
+[![Build Status](https://github.com/YOUR_USERNAME/tanggotyou/workflows/Build%20and%20Test/badge.svg)](https://github.com/YOUR_USERNAME/tanggotyou/actions)
+[![Docker](https://img.shields.io/docker/v/YOUR_USERNAME/tanggotyou?label=docker)](https://hub.docker.com/r/YOUR_USERNAME/tanggotyou)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 ## 功能特点
 
 - **AI 日语学习助手**: 基于 OpenAI GPT 的智能对话，随时解答日语学习问题
@@ -20,7 +24,39 @@
 
 ## 快速开始
 
-### 方法 1: Docker 部署（推荐）
+### 🎉 GitHub Pages 部署（最简单，完全免费）
+
+**无需服务器，无需 Docker，3 步上线！**
+
+```bash
+# 1. 推送代码
+git push origin main
+
+# 2. 启用 GitHub Pages
+# 在仓库 Settings → Pages → Source 选择 main 分支和 /docs 文件夹
+
+# 3. 访问网站
+# https://YOUR_USERNAME.github.io/tanggotyou/
+```
+
+用户在浏览器中输入自己的 OpenAI API Key，完全隐私安全！
+
+> 📖 详细指南：[GITHUB_PAGES.md](GITHUB_PAGES.md)
+
+---
+
+### 🚀 云平台一键部署（需服务器）
+
+适合不想让用户输入 API Key 的场景：
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/tanggotyou)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
+
+> 📖 详细部署指南：[DEPLOYMENT.md](DEPLOYMENT.md) | [QUICK_DEPLOY.md](QUICK_DEPLOY.md)
+
+---
+
+### 方法 1: Docker 部署（本地）
 
 最简单的方式，无需安装 Rust 环境：
 

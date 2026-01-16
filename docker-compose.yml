@@ -12,7 +12,7 @@ services:
       - OPENAI_API_BASE=${OPENAI_API_BASE:-https://api.openai.com/v1}
       - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o-mini}
       - RUST_LOG=${RUST_LOG:-tanggotyou=info,tower_http=info}
-    volumes:
+    # volumes:
       # 开发模式下可以挂载代码（生产环境注释掉）
       # - ./static:/app/static
       # - ./templates:/app/templates
