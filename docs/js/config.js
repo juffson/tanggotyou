@@ -1,7 +1,8 @@
 // 配置
 const CONFIG = {
-    OPENAI_API_BASE: 'https://api.openai.com/v1',
-    OPENAI_MODEL: 'gpt-4o-mini',
+    // 阿里云千问 API 兼容 OpenAI 格式
+    OPENAI_API_BASE: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+    OPENAI_MODEL: 'qwen-turbo',  // 可选: qwen-turbo, qwen-plus, qwen-max
     SYSTEM_PROMPT: `你是一个专业的日语学习助手。你的任务是：
 1. 帮助用户学习日语，包括语法、词汇、发音等
 2. 用中文解释，但要包含日语例句和罗马音标注

@@ -30,7 +30,7 @@ async function sendMessage() {
 
     const currentApiKey = getApiKey();
     if (!currentApiKey) {
-        alert('请先设置 OpenAI API Key。点击右上角的 🔑 按钮。');
+        alert('请先设置千问 API Key。点击右上角的 🔑 按钮。');
         showApiKeyModal();
         return;
     }

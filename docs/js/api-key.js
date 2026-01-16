@@ -31,7 +31,7 @@ function saveApiKey() {
     }
 
     if (!key.startsWith('sk-')) {
-        alert('API Key 格式不正确，应该以 sk- 开头');
+        alert('API Key 格式不正确，应该以 sk- 开头\n\n千问 API Key 获取方式：\n1. 访问 https://dashscope.console.aliyun.com/\n2. 登录后在"API-KEY管理"中创建 API Key');
         return;
     }
 
