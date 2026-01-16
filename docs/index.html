@@ -2,7 +2,9 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>日语学习 - AI助手 + 五十音</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -49,6 +51,142 @@
         }
         #api-key-modal {
             background: rgba(0,0,0,0.5);
+        }
+
+        /* 触摸反馈 - 禁用高亮 */
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+
+        /* 按钮触摸优化 */
+        button {
+            touch-action: manipulation;
+        }
+
+        /* 移动端优化 */
+        @media (max-width: 768px) {
+            /* 聊天窗口在移动端占满整屏 */
+            #chat-window {
+                height: 100vh !important;
+                height: 100dvh !important; /* 动态视口高度，避免地址栏影响 */
+            }
+
+            /* 聊天输入区域底部安全区域适配 */
+            #chat-window .border-t {
+                padding-bottom: calc(1rem + env(safe-area-inset-bottom)) !important;
+            }
+
+            /* 底部聊天栏安全区域适配 */
+            #chat-bar {
+                padding-bottom: calc(1rem + env(safe-area-inset-bottom)) !important;
+            }
+
+            /* 聊天消息区域优化 */
+            .message-user, .message-ai {
+                max-width: 85% !important;
+                font-size: 0.9rem;
+                padding: 0.75rem !important;
+            }
+
+            /* 聊天输入框优化 */
+            #message-input {
+                font-size: 16px !important; /* 防止iOS自动缩放 */
+            }
+
+            /* 底部聊天栏更紧凑 */
+            #chat-bar {
+                padding: 0.75rem !important;
+            }
+
+            #chat-bar .container {
+                padding: 0 1rem !important;
+            }
+
+            /* 头部标题更小 */
+            header h1 {
+                font-size: 1.5rem !important;
+            }
+
+            header p {
+                font-size: 0.75rem !important;
+            }
+
+            /* 五十音标题更小 */
+            .flex-1.bg-white h2 {
+                font-size: 1.75rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            /* 模式切换按钮更小 */
+            .mb-6 button {
+                padding: 0.5rem 1rem !important;
+                font-size: 0.875rem !important;
+            }
+
+            /* API Key 弹窗适配 */
+            #api-key-modal .bg-white {
+                margin: 1rem !important;
+                max-width: calc(100% - 2rem) !important;
+            }
+
+            #api-key-modal h2 {
+                font-size: 1.25rem !important;
+            }
+
+            #api-key-modal p {
+                font-size: 0.875rem !important;
+            }
+
+            /* 五十音格子更小 */
+            .gojuon-cell {
+                padding: 0.5rem !important;
+                font-size: 1.25rem !important;
+            }
+
+            /* 五十音网格间距减小 */
+            #gojuon-grid {
+                gap: 0.5rem !important;
+            }
+
+            /* Canvas 画布适配 */
+            #canvas {
+                max-width: 100% !important;
+                height: auto !important;
+            }
+
+            /* 测试选项按钮 */
+            .quiz-option {
+                padding: 0.75rem !important;
+                font-size: 0.9rem !important;
+            }
+
+            /* 容器内边距减小 */
+            .container {
+                padding: 0.5rem !important;
+            }
+
+            /* 主要内容区域优化 */
+            .flex-1.bg-white {
+                padding: 1rem !important;
+            }
+        }
+
+        /* 小屏手机优化 (iPhone SE等) */
+        @media (max-width: 375px) {
+            header h1 {
+                font-size: 1.25rem !important;
+            }
+
+            .gojuon-cell {
+                padding: 0.4rem !important;
+                font-size: 1rem !important;
+            }
+
+            .mb-6 button {
+                padding: 0.4rem 0.75rem !important;
+                font-size: 0.75rem !important;
+            }
         }
     </style>
 </head>

@@ -229,6 +229,37 @@ function initCanvas() {
     canvas = document.getElementById('canvas');
     if (!canvas) return;
 
+    // 响应式 Canvas 尺寸设置
+    function resizeCanvas() {
+        const container = canvas.parentElement;
+        const isMobile = window.innerWidth <= 768;
+
+        if (isMobile) {
+            const size = Math.min(container.clientWidth - 32, 400);
+            canvas.width = size;
+            canvas.height = size;
+            canvas.style.width = size + 'px';
+            canvas.style.height = size + 'px';
+        } else {
+            canvas.width = 500;
+            canvas.height = 500;
+            canvas.style.width = '500px';
+            canvas.style.height = '500px';
+        }
+
+        // 重新设置绘图属性（因为 canvas resize 会清空）
+        ctx = canvas.getContext('2d');
+        ctx.lineWidth = isMobile ? 3 : 4;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#000';
+    }
+
+    // 初始化大小
+    resizeCanvas();
+
+    // 监听窗口大小变化
+    window.addEventListener('resize', resizeCanvas);
+
     ctx = canvas.getContext('2d');
     ctx.lineWidth = 4;
     ctx.lineCap = 'round';
