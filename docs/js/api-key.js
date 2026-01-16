@@ -1,14 +1,11 @@
 // API Key 管理
 let apiKey = null;
 
-// 页面加载时检查是否已保存 API Key
+// 页面加载时检查是否已保存 API Key（但不弹窗）
 window.addEventListener('DOMContentLoaded', () => {
     apiKey = localStorage.getItem('openai_api_key');
-    if (apiKey) {
-        hideApiKeyModal();
-    } else {
-        showApiKeyModal();
-    }
+    // 始终隐藏弹窗，等用户点击发送消息时再检查
+    hideApiKeyModal();
 });
 
 function showApiKeyModal() {
@@ -48,7 +45,7 @@ function saveApiKey() {
 
 function skipApiKey() {
     hideApiKeyModal();
-    appendMessage('assistant', 'ℹ️ 你跳过了 API Key 设置。AI 聊天功能将不可用，但你仍然可以使用五十音练习功能。如需使用 AI 聊天，请点击右上角的 🔑 按钮设置 API Key。');
+    // 不再显示消息，因为用户是主动跳过的
 }
 
 function getApiKey() {
