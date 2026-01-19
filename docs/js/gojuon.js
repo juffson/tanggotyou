@@ -1,6 +1,7 @@
 // 全局状态
 let currentKana = 'hiragana';
 let currentMode = 'table';
+let currentType = 'seion'; // 清音、浊音、半浊音、拗音
 let quizData = [];
 let currentQuizIndex = 0;
 let quizCorrectCount = 0;
@@ -25,19 +26,44 @@ function renderGojuonGrid() {
 
     grid.innerHTML = '';
 
+    // 获取当前类型的数据
+    let dataToRender = [];
+    switch(currentType) {
+        case 'seion':
+            dataToRender = SEION_DATA;
+            break;
+        case 'dakuon':
+            dataToRender = DAKUON_DATA;
+            break;
+        case 'handakuon':
+            dataToRender = HANDAKUON_DATA;
+            break;
+        case 'youon':
+            dataToRender = YOON_DATA;
+            grid.className = 'grid grid-cols-3 gap-4 text-center'; // 拗音是3列
+            break;
+    }
+
     // 按行列组织
     const rows = [];
-    for (let i = 0; i <= 10; i++) {
+    const maxRow = Math.max(...dataToRender.map(item => item.row));
+    for (let i = 0; i <= maxRow; i++) {
         rows[i] = [];
     }
 
-    GOJUON_DATA.forEach(item => {
+    dataToRender.forEach(item => {
         rows[item.row][item.column] = item;
     });
 
+    // 确保网格是5列(拗音除外)
+    if (currentType !== 'youon') {
+        grid.className = 'grid grid-cols-5 gap-4 text-center';
+    }
+
     // 渲染网格
+    const cols = currentType === 'youon' ? 3 : 5;
     rows.forEach(row => {
-        for (let col = 0; col < 5; col++) {
+        for (let col = 0; col < cols; col++) {
             const item = row[col];
             const cell = document.createElement('div');
 
@@ -66,6 +92,22 @@ function switchKana(type) {
         type === 'hiragana' ? 'flex-1 px-3 py-1 rounded bg-blue-500 text-white text-sm' : 'flex-1 px-3 py-1 rounded bg-gray-200 text-sm';
     document.getElementById('btn-katakana').className =
         type === 'katakana' ? 'flex-1 px-3 py-1 rounded bg-blue-500 text-white text-sm' : 'flex-1 px-3 py-1 rounded bg-gray-200 text-sm';
+
+    renderGojuonGrid();
+}
+
+// 切换类型（清音/浊音/半浊音/拗音）
+function switchType(type) {
+    currentType = type;
+
+    ['seion', 'dakuon', 'handakuon', 'youon'].forEach(t => {
+        const btn = document.getElementById(`btn-${t}`);
+        if (btn) {
+            btn.className = t === type
+                ? 'flex-1 px-4 py-2 rounded-lg bg-blue-500 text-white text-sm font-bold'
+                : 'flex-1 px-4 py-2 rounded-lg bg-gray-200 text-sm font-bold';
+        }
+    });
 
     renderGojuonGrid();
 }
@@ -341,6 +383,12 @@ function updateWritingChar() {
 
     document.getElementById('writing-char').textContent = kana;
     document.getElementById('writing-romaji').textContent = item.romaji;
+
+    // 更新田字格示范
+    const tianzigeDemoEl = document.getElementById('tianzige-demo');
+    if (tianzigeDemoEl) {
+        tianzigeDemoEl.textContent = kana;
+    }
 }
 
 function nextWritingChar() {

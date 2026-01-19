@@ -144,6 +144,61 @@ pub const GOJUON_TABLE: &[Gojuon] = &[
     Gojuon::new("ぷ", "プ", "pu", 5, 2, CharType::Handakuon),
     Gojuon::new("ぺ", "ペ", "pe", 5, 3, CharType::Handakuon),
     Gojuon::new("ぽ", "ポ", "po", 5, 4, CharType::Handakuon),
+
+    // 拗音 - きゃ行
+    Gojuon::new("きゃ", "キャ", "kya", 0, 0, CharType::Youon),
+    Gojuon::new("きゅ", "キュ", "kyu", 0, 1, CharType::Youon),
+    Gojuon::new("きょ", "キョ", "kyo", 0, 2, CharType::Youon),
+
+    // 拗音 - しゃ行
+    Gojuon::new("しゃ", "シャ", "sha", 1, 0, CharType::Youon),
+    Gojuon::new("しゅ", "シュ", "shu", 1, 1, CharType::Youon),
+    Gojuon::new("しょ", "ショ", "sho", 1, 2, CharType::Youon),
+
+    // 拗音 - ちゃ行
+    Gojuon::new("ちゃ", "チャ", "cha", 2, 0, CharType::Youon),
+    Gojuon::new("ちゅ", "チュ", "chu", 2, 1, CharType::Youon),
+    Gojuon::new("ちょ", "チョ", "cho", 2, 2, CharType::Youon),
+
+    // 拗音 - にゃ行
+    Gojuon::new("にゃ", "ニャ", "nya", 3, 0, CharType::Youon),
+    Gojuon::new("にゅ", "ニュ", "nyu", 3, 1, CharType::Youon),
+    Gojuon::new("にょ", "ニョ", "nyo", 3, 2, CharType::Youon),
+
+    // 拗音 - ひゃ行
+    Gojuon::new("ひゃ", "ヒャ", "hya", 4, 0, CharType::Youon),
+    Gojuon::new("ひゅ", "ヒュ", "hyu", 4, 1, CharType::Youon),
+    Gojuon::new("ひょ", "ヒョ", "hyo", 4, 2, CharType::Youon),
+
+    // 拗音 - みゃ行
+    Gojuon::new("みゃ", "ミャ", "mya", 5, 0, CharType::Youon),
+    Gojuon::new("みゅ", "ミュ", "myu", 5, 1, CharType::Youon),
+    Gojuon::new("みょ", "ミョ", "myo", 5, 2, CharType::Youon),
+
+    // 拗音 - りゃ行
+    Gojuon::new("りゃ", "リャ", "rya", 6, 0, CharType::Youon),
+    Gojuon::new("りゅ", "リュ", "ryu", 6, 1, CharType::Youon),
+    Gojuon::new("りょ", "リョ", "ryo", 6, 2, CharType::Youon),
+
+    // 拗音 (浊音) - ぎゃ行
+    Gojuon::new("ぎゃ", "ギャ", "gya", 7, 0, CharType::Youon),
+    Gojuon::new("ぎゅ", "ギュ", "gyu", 7, 1, CharType::Youon),
+    Gojuon::new("ぎょ", "ギョ", "gyo", 7, 2, CharType::Youon),
+
+    // 拗音 (浊音) - じゃ行
+    Gojuon::new("じゃ", "ジャ", "ja", 8, 0, CharType::Youon),
+    Gojuon::new("じゅ", "ジュ", "ju", 8, 1, CharType::Youon),
+    Gojuon::new("じょ", "ジョ", "jo", 8, 2, CharType::Youon),
+
+    // 拗音 (浊音) - びゃ行
+    Gojuon::new("びゃ", "ビャ", "bya", 9, 0, CharType::Youon),
+    Gojuon::new("びゅ", "ビュ", "byu", 9, 1, CharType::Youon),
+    Gojuon::new("びょ", "ビョ", "byo", 9, 2, CharType::Youon),
+
+    // 拗音 (半浊音) - ぴゃ行
+    Gojuon::new("ぴゃ", "ピャ", "pya", 10, 0, CharType::Youon),
+    Gojuon::new("ぴゅ", "ピュ", "pyu", 10, 1, CharType::Youon),
+    Gojuon::new("ぴょ", "ピョ", "pyo", 10, 2, CharType::Youon),
 ];
 
 #[derive(Debug, Serialize, Deserialize)]

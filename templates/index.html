@@ -34,6 +34,39 @@
             cursor: crosshair;
             touch-action: none;
         }
+        .tianzige {
+            display: inline-block;
+            width: 120px;
+            height: 120px;
+            border: 2px solid #333;
+            position: relative;
+            background: white;
+        }
+        .tianzige::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            border-top: 1px dashed #999;
+        }
+        .tianzige::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            border-left: 1px dashed #999;
+        }
+        .tianzige-char {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 72px;
+            font-weight: bold;
+            color: #2196f3;
+        }
         .quiz-option {
             transition: all 0.2s;
         }
@@ -41,12 +74,12 @@
             background: #e3f2fd;
         }
         .quiz-option.correct {
-            background: #c8e6c9;
-            border-color: #4caf50;
+            background: #c8e6c9 !important;
+            border-color: #4caf50 !important;
         }
         .quiz-option.incorrect {
-            background: #ffcdd2;
-            border-color: #f44336;
+            background: #ffcdd2 !important;
+            border-color: #f44336 !important;
         }
     </style>
 </head>
@@ -84,6 +117,21 @@
                             片假名
                         </button>
                     </div>
+                    <!-- 类型切换 -->
+                    <div class="mb-3 flex gap-2">
+                        <button onclick="switchType('seion')" id="btn-seion" class="flex-1 px-3 py-1 rounded bg-blue-500 text-white text-xs">
+                            清音
+                        </button>
+                        <button onclick="switchType('dakuon')" id="btn-dakuon" class="flex-1 px-3 py-1 rounded bg-gray-200 text-xs">
+                            浊音
+                        </button>
+                        <button onclick="switchType('handakuon')" id="btn-handakuon" class="flex-1 px-3 py-1 rounded bg-gray-200 text-xs">
+                            半浊音
+                        </button>
+                        <button onclick="switchType('youon')" id="btn-youon" class="flex-1 px-3 py-1 rounded bg-gray-200 text-xs">
+                            拗音
+                        </button>
+                    </div>
                     <div id="gojuon-grid" class="grid grid-cols-5 gap-3 text-center"></div>
                 </div>
 
@@ -113,6 +161,15 @@
                         <p class="text-center font-bold text-2xl mb-3">练习书写: <span id="writing-char">あ</span></p>
                         <p class="text-center text-gray-600 text-lg mb-4"><span id="writing-romaji">a</span></p>
                     </div>
+
+                    <!-- 田字格示范 -->
+                    <div class="mb-6 text-center">
+                        <p class="text-sm text-gray-600 mb-2">田字格示范</p>
+                        <div class="tianzige mx-auto">
+                            <span class="tianzige-char" id="tianzige-demo">あ</span>
+                        </div>
+                    </div>
+
                     <canvas id="canvas" width="400" height="400" class="mb-4 mx-auto"></canvas>
                     <div class="flex gap-3">
                         <button onclick="clearCanvas()" class="flex-1 bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 text-lg">

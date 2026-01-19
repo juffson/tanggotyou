@@ -2,6 +2,7 @@
 let gojuonData = [];
 let currentKana = 'hiragana';
 let currentMode = 'table';
+let currentType = 'seion'; // 清音、浊音、半浊音、拗音
 let quizData = [];
 let currentQuizIndex = 0;
 let quizCorrectCount = 0;
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 // 加载五十音数据
 async function loadGojuonData() {
     try {
-        const response = await fetch('/api/gojuon/seion');
+        const response = await fetch('/api/gojuon/data');
         gojuonData = await response.json();
     } catch (error) {
         console.error('加载五十音数据失败:', error);
@@ -37,21 +38,30 @@ function renderGojuonGrid() {
 
     grid.innerHTML = '';
 
-    // 只显示清音（seion），按行列组织
+    // 过滤当前类型的数据
+    const dataToRender = gojuonData.filter(item => item.type === currentType);
+
+    // 按行列组织
     const rows = [];
-    for (let i = 0; i <= 10; i++) {
+    const maxRow = Math.max(...dataToRender.map(item => item.row), 0);
+    for (let i = 0; i <= maxRow; i++) {
         rows[i] = [];
     }
 
-    gojuonData.forEach(item => {
-        if (item.type === 'seion') {
-            rows[item.row][item.column] = item;
-        }
+    dataToRender.forEach(item => {
+        if (!rows[item.row]) rows[item.row] = [];
+        rows[item.row][item.column] = item;
     });
+
+    // 确定列数：拗音是3列，其他是5列
+    const cols = currentType === 'youon' ? 3 : 5;
+    grid.className = currentType === 'youon'
+        ? 'grid grid-cols-3 gap-3 text-center'
+        : 'grid grid-cols-5 gap-3 text-center';
 
     // 渲染网格
     rows.forEach(row => {
-        for (let col = 0; col < 5; col++) {
+        for (let col = 0; col < cols; col++) {
             const item = row[col];
             const cell = document.createElement('div');
 
@@ -81,6 +91,22 @@ function switchKana(type) {
         type === 'hiragana' ? 'flex-1 px-3 py-1 rounded bg-blue-500 text-white text-sm' : 'flex-1 px-3 py-1 rounded bg-gray-200 text-sm';
     document.getElementById('btn-katakana').className =
         type === 'katakana' ? 'flex-1 px-3 py-1 rounded bg-blue-500 text-white text-sm' : 'flex-1 px-3 py-1 rounded bg-gray-200 text-sm';
+
+    renderGojuonGrid();
+}
+
+// 切换类型（清音/浊音/半浊音/拗音）
+function switchType(type) {
+    currentType = type;
+
+    ['seion', 'dakuon', 'handakuon', 'youon'].forEach(t => {
+        const btn = document.getElementById(`btn-${t}`);
+        if (btn) {
+            btn.className = t === type
+                ? 'flex-1 px-3 py-1 rounded bg-blue-500 text-white text-xs'
+                : 'flex-1 px-3 py-1 rounded bg-gray-200 text-xs';
+        }
+    });
 
     renderGojuonGrid();
 }
@@ -290,6 +316,12 @@ function updateWritingChar() {
 
     document.getElementById('writing-char').textContent = kana;
     document.getElementById('writing-romaji').textContent = item.romaji;
+
+    // 更新田字格示范
+    const tianzigeDemoEl = document.getElementById('tianzige-demo');
+    if (tianzigeDemoEl) {
+        tianzigeDemoEl.textContent = kana;
+    }
 }
 
 function nextWritingChar() {
