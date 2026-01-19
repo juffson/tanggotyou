@@ -226,6 +226,44 @@ function showQuizResults() {
 
 // === 书写模式 ===
 
+// 绘制田字格
+function drawTianzige() {
+    if (!canvas) return;
+
+    const width = canvas.width;
+    const height = canvas.height;
+
+    // 清除之前的内容
+    ctx.clearRect(0, 0, width, height);
+
+    // 绘制外边框
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(0, 0, width, height);
+
+    // 绘制十字辅助线（虚线）
+    ctx.strokeStyle = '#999';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([5, 5]);
+
+    // 横向中线
+    ctx.beginPath();
+    ctx.moveTo(0, height / 2);
+    ctx.lineTo(width, height / 2);
+    ctx.stroke();
+
+    // 纵向中线
+    ctx.beginPath();
+    ctx.moveTo(width / 2, 0);
+    ctx.lineTo(width / 2, height);
+    ctx.stroke();
+
+    // 重置虚线设置和绘图属性
+    ctx.setLineDash([]);
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 4;
+}
+
 // 初始化 Canvas
 function initCanvas() {
     canvas = document.getElementById('canvas');
@@ -235,6 +273,9 @@ function initCanvas() {
     ctx.lineWidth = 4;
     ctx.lineCap = 'round';
     ctx.strokeStyle = '#000';
+
+    // 绘制田字格
+    drawTianzige();
 
     // 鼠标事件
     canvas.addEventListener('mousedown', startDrawing);
@@ -306,6 +347,7 @@ function handleTouchMove(e) {
 
 function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawTianzige(); // 重新绘制田字格
 }
 
 function updateWritingChar() {

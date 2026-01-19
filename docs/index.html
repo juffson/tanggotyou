@@ -65,7 +65,8 @@
             left: 50%;
             transform: translate(-50%, -50%);
             font-size: 72px;
-            font-weight: bold;
+            font-weight: normal;
+            font-family: 'Yu Mincho', 'Hiragino Mincho ProN', 'MS Mincho', serif;
             color: #2196f3;
         }
         .quiz-option {
@@ -84,6 +85,33 @@
         }
         #api-key-modal {
             background: rgba(0,0,0,0.5);
+        }
+
+        /* 聊天按钮 - 固定在右下角 */
+        #chat-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        #chat-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
+        }
+
+        #chat-button.active {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
         }
 
         /* 触摸反馈 - 禁用高亮 */
@@ -110,9 +138,11 @@
                 padding-bottom: calc(1rem + env(safe-area-inset-bottom)) !important;
             }
 
-            /* 底部聊天栏安全区域适配 */
-            #chat-bar {
-                padding-bottom: calc(1rem + env(safe-area-inset-bottom)) !important;
+            /* 移动端聊天按钮调整 */
+            #chat-button {
+                bottom: calc(1.5rem + env(safe-area-inset-bottom)) !important;
+                width: 56px !important;
+                height: 56px !important;
             }
 
             /* 聊天消息区域优化 */
@@ -125,15 +155,6 @@
             /* 聊天输入框优化 */
             #message-input {
                 font-size: 16px !important; /* 防止iOS自动缩放 */
-            }
-
-            /* 底部聊天栏更紧凑 */
-            #chat-bar {
-                padding: 0.75rem !important;
-            }
-
-            #chat-bar .container {
-                padding: 0 1rem !important;
             }
 
             /* 头部标题更小 */
@@ -359,21 +380,12 @@
         </div>
     </div>
 
-    <!-- 底部聊天栏 -->
-    <div id="chat-bar" class="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg cursor-pointer hover:from-blue-600 hover:to-blue-700 transition z-50" onclick="toggleChat()">
-        <div class="container mx-auto px-6 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <span class="text-2xl">💬</span>
-                <div>
-                    <p class="font-bold text-lg">AI 日语助手</p>
-                    <p class="text-sm text-blue-100">点击开始对话</p>
-                </div>
-            </div>
-            <button class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition">
-                <span id="chat-toggle-icon">▲ 打开</span>
-            </button>
-        </div>
-    </div>
+    <!-- 聊天按钮 - 右下角浮动 -->
+    <button id="chat-button" onclick="toggleChat()" aria-label="打开聊天">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+        </svg>
+    </button>
 
     <!-- 聊天弹窗 -->
     <div id="chat-window" class="fixed bottom-0 left-0 right-0 bg-white shadow-2xl transform translate-y-full transition-transform duration-300 z-40" style="height: 60vh;">
