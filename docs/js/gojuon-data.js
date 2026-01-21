@@ -87,8 +87,8 @@ const DAKUON_DATA = [
 
     // だ行
     { hiragana: 'だ', katakana: 'ダ', romaji: 'da', row: 2, column: 0, type: 'dakuon' },
-    { hiragana: 'ぢ', katakana: 'ヂ', romaji: 'di', row: 2, column: 1, type: 'dakuon' },
-    { hiragana: 'づ', katakana: 'ヅ', romaji: 'du', row: 2, column: 2, type: 'dakuon' },
+    { hiragana: 'ぢ', katakana: 'ヂ', romaji: 'ji', row: 2, column: 1, type: 'dakuon' },
+    { hiragana: 'づ', katakana: 'ヅ', romaji: 'zu', row: 2, column: 2, type: 'dakuon' },
     { hiragana: 'で', katakana: 'デ', romaji: 'de', row: 2, column: 3, type: 'dakuon' },
     { hiragana: 'ど', katakana: 'ド', romaji: 'do', row: 2, column: 4, type: 'dakuon' },
 
